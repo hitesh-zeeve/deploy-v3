@@ -9,6 +9,12 @@ import { MigrationState } from './src/migrations'
 import { asciiStringToBytes32 } from './src/util/asciiStringToBytes32'
 import { version } from './package.json'
 
+// -pk 0x63fe8d8db84e88ea3d9620aa9362340ec872df716bd272b13ddfa248bc015e3c
+// -j https://bridge.testpoly-vali-a7c0ac.zeeve.net/l2
+// -w9 0xe0f724f534968ed4b7a092e81ff6c6a6f471dec3
+// -ncl ETH
+// -o 0x6f9191bfdc6c596bC20Bb8EA546ca52b1C652CFc
+// -c 0
 program
   .requiredOption('-pk, --private-key <string>', 'Private key used to deploy all contracts')
   .requiredOption('-j, --json-rpc <url>', 'JSON RPC URL where the program should be deployed')
@@ -132,9 +138,11 @@ async function run() {
     await Promise.all(
       result.map(
         (stepResult): Promise<TransactionReceipt | true> => {
+          console.log(JSON.stringify(stepResult))
           if (stepResult.hash) {
             return wallet.provider.waitForTransaction(stepResult.hash, confirmations, /* 15 minutes */ 1000 * 60 * 15)
           } else {
+            console.log('TRUEEE')
             return Promise.resolve(true)
           }
         }
